@@ -1,7 +1,11 @@
+import 'package:footsie/api.dart';
 import 'package:footsie/components/primary_button.dart';
 import 'package:footsie/constants.dart';
 import 'package:footsie/screens/chats/chats_screen.dart';
 import 'package:flutter/material.dart';
+import 'dart:convert';
+
+import 'package:footsie/util/toast_util.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -12,18 +16,16 @@ class Login extends StatefulWidget {
 
 class LoginState extends State<Login> with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  final _usernameController = TextEditingController();
-  final _passwordController = TextEditingController();
-  String _username = '', _password = '';
+  String name = '', pwd = '', email = '';
 
   @override
   void initState() {
     // TabController(vsync: true, length: 2);
     super.initState();
-    _tabController = new TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
   }
 
-  Widget InputTextField(
+  Widget inputTextField(
     TextInputType keyboardType, {
     focusNode,
     controller,
@@ -32,9 +34,9 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
     bool obscureText = false,
   }) {
     return Container(
-      margin: EdgeInsets.all(10.0),
-      padding:
-          EdgeInsets.only(top: 10.0, left: 20.0, right: 20.0, bottom: 10.0),
+      margin: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.only(
+          top: 10.0, left: 20.0, right: 20.0, bottom: 10.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
         color: Colors.black12,
@@ -55,31 +57,29 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
   }
 
   Widget usernameInput() {
-    return InputTextField(
+    return inputTextField(
       TextInputType.text,
-      controller: _usernameController,
       decoration: const InputDecoration.collapsed(
         hintText: "用户名",
       ),
       onChanged: (value) {
         setState(() {
-          _username = value;
+          name = value;
         });
       },
     );
   }
 
   Widget passwordInput() {
-    return InputTextField(
+    return inputTextField(
       TextInputType.text,
       obscureText: true,
-      controller: _passwordController,
       decoration: const InputDecoration.collapsed(
         hintText: "密码",
       ),
       onChanged: (value) {
         setState(() {
-          _password = value;
+          pwd = value;
         });
       },
     );
@@ -91,6 +91,27 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
     );
   }
 
+  Widget buildRegister() {
+    return const Center(
+      child: Text("注册"),
+    );
+  }
+
+  _login(context) async {
+    final res = jsonDecode((await login({'name': name, 'pwd': pwd})).data);
+
+    if (res['code'] != 200) {
+      showErrorSnackBar(res['msg']);
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ChatsScreen(),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,53 +120,30 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
           padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
           child: Column(
             children: [
-              const Spacer(flex: 2),
               Image.asset(
                 "assets/images/footsie-logo.png",
                 height: 120,
               ),
-              const Spacer(),
               TabBar(
-                tabs: [
-                  Tab(icon: Icon(Icons.directions_car)),
-                  Tab(icon: Icon(Icons.directions_transit)),
+                tabs: const [
+                  Tab(
+                    text: "登录",
+                  ),
+                  Tab(text: "注册"),
                 ],
                 controller: _tabController,
               ),
-
-              //           TabBarView(
-              // children: [
-              //   buildLogin()
-              // ],//用于切换的子控件列表，若要合TabBar一起使用注意和TabBar的长度一样
-              // controller:,//控制器，若TabBar一起使用注意和TabBar使用同一个controller ，这样才能保证两者的联动关系
-              // ), //??
-              // ),
-              Center(
-                  child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  const SizedBox(
-                    height: 10,
-                  ),
-                ],
-              )),
-              PrimaryButton(
-                text: "登录",
-                press: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ChatsScreen(),
-                  ),
+              Expanded(
+                child: TabBarView(
+                  children: [buildLogin(), buildRegister()],
+                  controller: _tabController,
                 ),
               ),
-              const SizedBox(height: kDefaultPadding * 1.5),
               PrimaryButton(
-                color: Theme.of(context).colorScheme.secondary,
-                text: "注册",
-                press: () {},
-              ),
-              const Spacer(flex: 2),
+                  text: "登录",
+                  press: () {
+                    _login(context);
+                  })
             ],
           ),
         ),
