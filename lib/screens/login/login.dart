@@ -10,10 +10,18 @@ class Login extends StatefulWidget {
   LoginState createState() => LoginState();
 }
 
-class LoginState extends State<Login> {
+class LoginState extends State<Login> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   String _username = '', _password = '';
+
+  @override
+  void initState() {
+    // TabController(vsync: true, length: 2);
+    super.initState();
+    _tabController = new TabController(length: 2, vsync: this);
+  }
 
   Widget InputTextField(
     TextInputType keyboardType, {
@@ -22,11 +30,15 @@ class LoginState extends State<Login> {
     onChanged,
     decoration,
     bool obscureText = false,
-    height = 50.0,
   }) {
     return Container(
-      height: height,
       margin: EdgeInsets.all(10.0),
+      padding:
+          EdgeInsets.only(top: 10.0, left: 20.0, right: 20.0, bottom: 10.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(30),
+        color: Colors.black12,
+      ),
       child: Column(
         children: [
           TextField(
@@ -37,87 +49,45 @@ class LoginState extends State<Login> {
             decoration: decoration,
             onChanged: onChanged,
           ),
-          Divider(
-            height: 1.0,
-            color: Colors.grey[400],
-          ),
         ],
       ),
     );
   }
 
   Widget usernameInput() {
-    return Container(
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
-          color: Colors.black12,
-        ),
-        alignment: Alignment.center,
-        child: InputTextField(
-          TextInputType.number,
-          controller: _usernameController,
-          decoration: InputDecoration(
-            hintText: "用户名",
-            border: InputBorder.none,
-            //使用 GestureDetector 实现手势识别
-            suffixIcon: GestureDetector(
-              child: Offstage(
-                offstage: _username == '',
-                child: Icon(Icons.clear),
-              ),
-              //点击清除文本框内容
-              onTap: () {
-                setState(() {
-                  _username = '';
-                  _usernameController.clear();
-                });
-              },
-            ),
-          ),
-          //使用 onChanged 完成双向绑定
-          onChanged: (value) {
-            setState(() {
-              _username = value;
-            });
-          },
-        ));
+    return InputTextField(
+      TextInputType.text,
+      controller: _usernameController,
+      decoration: const InputDecoration.collapsed(
+        hintText: "用户名",
+      ),
+      onChanged: (value) {
+        setState(() {
+          _username = value;
+        });
+      },
+    );
   }
 
   Widget passwordInput() {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30),
-        color: Colors.black12,
+    return InputTextField(
+      TextInputType.text,
+      obscureText: true,
+      controller: _passwordController,
+      decoration: const InputDecoration.collapsed(
+        hintText: "密码",
       ),
-      alignment: Alignment.center,
-      child: InputTextField(
-        TextInputType.text,
-        obscureText: true,
-        controller: _passwordController,
-        decoration: InputDecoration(
-          hintText: "密码",
-          suffixIcon: GestureDetector(
-            child: Offstage(
-              offstage: _password == '',
-              child: const Icon(Icons.clear),
-            ),
-            onTap: () {
-              setState(() {
-                _password = '';
-                _passwordController.clear();
-              });
-            },
-          ),
-          border: InputBorder.none,
-        ),
-        onChanged: (value) {
-          setState(() {
-            _password = value;
-          });
-        },
-      ),
+      onChanged: (value) {
+        setState(() {
+          _password = value;
+        });
+      },
+    );
+  }
+
+  Widget buildLogin() {
+    return Column(
+      children: [usernameInput(), passwordInput()],
     );
   }
 
@@ -135,13 +105,26 @@ class LoginState extends State<Login> {
                 height: 120,
               ),
               const Spacer(),
+              TabBar(
+                tabs: [
+                  Tab(icon: Icon(Icons.directions_car)),
+                  Tab(icon: Icon(Icons.directions_transit)),
+                ],
+                controller: _tabController,
+              ),
+
+              //           TabBarView(
+              // children: [
+              //   buildLogin()
+              // ],//用于切换的子控件列表，若要合TabBar一起使用注意和TabBar的长度一样
+              // controller:,//控制器，若TabBar一起使用注意和TabBar使用同一个controller ，这样才能保证两者的联动关系
+              // ), //??
+              // ),
               Center(
                   child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  usernameInput(),
-                  passwordInput(),
                   const SizedBox(
                     height: 10,
                   ),
