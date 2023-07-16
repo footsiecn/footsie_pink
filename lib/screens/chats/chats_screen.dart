@@ -1,5 +1,7 @@
 import 'package:footsie/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:footsie/util/reg_util.dart';
+import 'dart:convert';
 
 import 'components/body.dart';
 
@@ -20,6 +22,7 @@ class _ChatsScreenState extends State<ChatsScreen> {
   }
 
   BottomNavigationBar buildBottomNavigationBar() {
+    final u = jsonDecode(Instances.sp.getString('userinfo') ?? '');
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       currentIndex: _selectedIndex,
@@ -28,17 +31,15 @@ class _ChatsScreenState extends State<ChatsScreen> {
           _selectedIndex = value;
         });
       },
-      items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.messenger), label: "消息"),
-        BottomNavigationBarItem(icon: Icon(Icons.people), label: "身边"),
-
+      items: [
+        const BottomNavigationBarItem(icon: Icon(Icons.messenger), label: "消息"),
+        const BottomNavigationBarItem(icon: Icon(Icons.people), label: "身边"),
         BottomNavigationBarItem(
           icon: CircleAvatar(
             radius: 14,
-            backgroundImage: AssetImage("assets/images/user_2.png"),
+            child: Image.network(getAvatar(avatar: u['email'])),
           ),
           label: "我的",
-
         ),
       ],
     );

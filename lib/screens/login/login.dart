@@ -103,6 +103,8 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
     if (res['code'] != 200) {
       showErrorSnackBar(res['msg']);
     } else {
+      Instances.sp.setString('usertoken', res['data']['token']);
+      Instances.sp.setString('userinfo', jsonEncode(res['data']['user']));
       Navigator.push(
         context,
         MaterialPageRoute(

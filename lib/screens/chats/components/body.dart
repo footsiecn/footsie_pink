@@ -1,12 +1,25 @@
-import 'package:footsie/components/filled_outline_button.dart';
-import 'package:footsie/constants.dart';
+
 import 'package:footsie/models/Chat.dart';
 import 'package:footsie/screens/messages/message_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'chat_card.dart';
 
-class Body extends StatelessWidget {
+class Body extends StatefulWidget {
+  const Body({Key? key}) : super(key: key);
+
+  @override
+  BodyState createState() => BodyState();
+}
+
+class BodyState extends State<Body> with SingleTickerProviderStateMixin {
+  @override
+  void initState() {
+    super.initState();
+    
+    
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
