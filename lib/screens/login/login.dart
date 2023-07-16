@@ -2,6 +2,7 @@ import 'package:footsie/api.dart';
 import 'package:footsie/components/primary_button.dart';
 import 'package:footsie/constants.dart';
 import 'package:footsie/screens/chats/chats_screen.dart';
+import 'package:footsie/screens/chats/chats_screen1.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 

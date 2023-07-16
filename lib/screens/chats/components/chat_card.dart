@@ -31,8 +31,8 @@ class ChatCard extends StatelessWidget {
                   child: ClipOval(
                       child: CachedNetworkImage(
                     imageUrl: getAvatar(avatar: chat['email']),
-                    width: 30,
-                    height: 30,
+                    width: 48,
+                    height: 48,
                   )),
                 ),
                 if (chat['distance'] < 10)
@@ -69,7 +69,7 @@ class ChatCard extends StatelessWidget {
                     Opacity(
                       opacity: 0.64,
                       child: Text(
-                        chat['_id'],
+                        chat['distance'].ceil().toString() + ' km',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
