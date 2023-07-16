@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:footsie/models/ChatMessage.dart';
 import 'package:flutter/material.dart';
 
@@ -12,38 +14,46 @@ class Message extends StatelessWidget {
     required this.message,
   }) : super(key: key);
 
-  final ChatMessage message;
+  final Map message;
 
   @override
   Widget build(BuildContext context) {
-    Widget messageContaint(ChatMessage message) {
-      switch (message.messageType) {
-        case ChatMessageType.text:
-          return TextMessage(message: message);
-        case ChatMessageType.audio:
-          return AudioMessage(message: message);
-        case ChatMessageType.video:
-          return VideoMessage();
-        default:
-          return SizedBox();
-      }
-    }
+    final u = jsonDecode(Instances.sp.getString('userinfo') ?? '');
+
+    final isSender = u['_id'] == message['uid'];
 
     return Padding(
       padding: const EdgeInsets.only(top: kDefaultPadding),
       child: Row(
         mainAxisAlignment:
-            message.isSender ? MainAxisAlignment.end : MainAxisAlignment.start,
+            isSender ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
-          if (!message.isSender) ...[
+          if (!isSender) ...[
             const CircleAvatar(
               radius: 12,
               backgroundImage: AssetImage("assets/images/user_2.png"),
             ),
             const SizedBox(width: kDefaultPadding / 2),
           ],
-          messageContaint(message),
-          if (message.isSender) MessageStatusDot(status: message.messageStatus)
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: kDefaultPadding * 0.75,
+              vertical: kDefaultPadding / 2,
+            ),
+            decoration: BoxDecoration(
+              color: kPrimaryColor.withOpacity(isSender ? 1 : 0.1),
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: Text(
+              message['content'],
+              style: TextStyle(
+                color: isSender
+                    ? Colors.white
+                    : Theme.of(context).textTheme.bodyText1!.color,
+              ),
+            ),
+          )
+          // if (isSender) MessageStatusDot(status: message.messageStatus)
         ],
       ),
     );
