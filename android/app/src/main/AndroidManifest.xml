@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.clicli_grey">
+    package="com.example.boyslove">
    <application
-        android:label="CliCli"
+        android:label="黑皮书"
         android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
         <activity
