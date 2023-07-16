@@ -24,7 +24,7 @@ class _ChatsScreen extends State<ChatsScreen>
 
   getUserList() async {
     final u = jsonDecode(Instances.sp.getString('userinfo') ?? '');
-    userList = jsonDecode((await getUsers(u['_id'])).data)['data'];
+    userList = jsonDecode((await getUsers(u['_id'])).data)['data'] ?? [];
     setState(() {});
   }
 
@@ -58,9 +58,7 @@ class _ChatsScreen extends State<ChatsScreen>
       stream: stream,
       builder: (context, snapshot) {
         return Text(
-          snapshot.hasData
-              ? '在线'
-              : '',
+          snapshot.hasData ? '在线' : '',
         );
       },
     );
@@ -97,13 +95,19 @@ class _ChatsScreen extends State<ChatsScreen>
       //     )
       //   ],
       // ),
-      title: Row(
-        children: [
-          Text(
-            u['name'],
-          ),
-          showData()
-        ],
+      title: InkWell(
+        onLongPress: () {
+          Instances.sp.remove('usertoken');
+          Instances.sp.remove('userinfo');
+        },
+        child: Row(
+          children: [
+            Text(
+              u['name'],
+            ),
+            showData()
+          ],
+        ),
       ),
       actions: const [
         Center(

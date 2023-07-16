@@ -85,15 +85,53 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
     );
   }
 
+    Widget emailInput() {
+    return inputTextField(
+      TextInputType.text,
+      decoration: const InputDecoration.collapsed(
+        hintText: "邮箱",
+      ),
+      onChanged: (value) {
+        setState(() {
+          email = value;
+        });
+      },
+    );
+  }
+
   Widget buildLogin() {
     return Column(
-      children: [usernameInput(), passwordInput()],
+      children: [
+        usernameInput(),
+        passwordInput(),
+        Padding(
+          padding: EdgeInsets.all(10),
+          child: PrimaryButton(
+              text: "登录",
+              press: () {
+                _login(context);
+              }),
+        )
+      ],
     );
   }
 
   Widget buildRegister() {
-    return const Center(
-      child: Text("注册"),
+    return Column(
+      children: [
+        emailInput(),
+        usernameInput(),
+        passwordInput(),
+        Padding(
+          padding: EdgeInsets.all(10),
+          child: PrimaryButton(
+              text: "注册",
+              color: kSecondaryColor,
+              press: () {
+                _register(context);
+              }),
+        )
+      ],
     );
   }
 
@@ -114,15 +152,34 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
     }
   }
 
+    _register (context) async {
+    final res = jsonDecode((await register({'name': name, 'pwd': pwd, 'email': email})).data);
+
+    if (res['code'] != 200) {
+      showErrorSnackBar(res['msg']);
+    } else {
+      showErrorSnackBar(res['msg']);
+      
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
+          padding: const EdgeInsets.all(50),
           child: Column(
             children: [
+              Text(
+                "小蓝书",
+                style: TextStyle(
+                    fontSize: 50,
+                    color: kPrimaryColor,
+                    fontWeight: FontWeight.bold),
+              ),
               TabBar(
+                labelColor: kSecondaryColor,
                 indicator: const BoxDecoration(),
                 tabs: const [
                   Tab(
@@ -138,11 +195,6 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                   controller: _tabController,
                 ),
               ),
-              PrimaryButton(
-                  text: "登录",
-                  press: () {
-                    _login(context);
-                  })
             ],
           ),
         ),
