@@ -1,17 +1,19 @@
 import 'package:footsie/constants.dart';
+import 'package:footsie/models/ChatMessage.dart';
 import 'package:flutter/material.dart';
 
-import 'components/body.dart';
+import 'components/chat_input_field.dart';
+import 'components/message.dart';
 
-class MessagesScreen extends StatelessWidget {
+class MessagesScreen extends StatefulWidget {
+  const MessagesScreen({Key? key}) : super(key: key);
+
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: buildAppBar(),
-      body: Body(),
-    );
-  }
+  _MessagesScreen createState() => _MessagesScreen();
+}
 
+class _MessagesScreen extends State<MessagesScreen>
+    with SingleTickerProviderStateMixin {
   AppBar buildAppBar() {
     return AppBar(
       automaticallyImplyLeading: false,
@@ -35,6 +37,28 @@ class MessagesScreen extends StatelessWidget {
               )
             ],
           )
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: buildAppBar(),
+      body: Column(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
+              child: ListView.builder(
+                itemCount: demeChatMessages.length,
+                itemBuilder: (context, index) =>
+                    Message(message: demeChatMessages[index]),
+              ),
+            ),
+          ),
+          ChatInputField(),
         ],
       ),
     );

@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:footsie/api.dart';
 import 'package:footsie/constants.dart';
-import 'package:footsie/models/Chat.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:footsie/screens/messages/message_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:footsie/util/reg_util.dart';
@@ -19,6 +19,8 @@ class _ChatsScreen extends State<ChatsScreen>
     with SingleTickerProviderStateMixin {
   List userList = [];
   Map userinfo = {};
+  late WebSocketChannel channel;
+  late Stream stream;
 
   getUserList() async {
     final u = jsonDecode(Instances.sp.getString('userinfo') ?? '');
@@ -32,6 +34,36 @@ class _ChatsScreen extends State<ChatsScreen>
     getUserList();
     // 更新自己的位置
     // 链接 websocket
+    final uid = jsonDecode(Instances.sp.getString('userinfo') ?? '')['_id'];
+    channel = WebSocketChannel.connect(
+      Uri.parse('wss://www.boyslove.org/chat?uid=$uid'),
+    );
+    stream = channel.stream.asBroadcastStream();
+
+    stream.listen(
+      (data) {
+        print('data: $data');
+      },
+      onDone: () {
+        print('ok');
+      },
+      onError: (err, stack) {
+        print('err');
+      },
+    );
+  }
+
+  Widget showData() {
+    return StreamBuilder(
+      stream: stream,
+      builder: (context, snapshot) {
+        return Text(
+          snapshot.hasData
+              ? '${snapshot.data == 'ok' ? '在线' : snapshot.data}'
+              : '',
+        );
+      },
+    );
   }
 
   AppBar buildAppBar() {
@@ -65,7 +97,14 @@ class _ChatsScreen extends State<ChatsScreen>
       //     )
       //   ],
       // ),
-      title: Text(u['name']),
+      title: Row(
+        children: [
+          Text(
+            u['name'],
+          ),
+          showData()
+        ],
+      ),
       actions: const [
         Center(
           child: Padding(
