@@ -149,7 +149,11 @@ class _ChatsScreen extends State<ChatsScreen>
                 press: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MessagesScreen(),
+                    builder: (context) => MessagesScreen(
+                      data: userList[index],
+                      channel: channel,
+                      stream: stream,
+                    ),
                   ),
                 ),
               ),

@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
+      themeMode: ThemeMode.light,
       theme: lightThemeData(context),
       darkTheme: darkThemeData(context),
       home: u != null ? ChatsScreen() : Login(),
