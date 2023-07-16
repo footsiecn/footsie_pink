@@ -70,6 +70,20 @@ class _MessagesScreen extends State<MessagesScreen>
   @override
   void initState() {
     super.initState();
+
+    widget.stream.listen(
+      (data) {
+        setState(() {
+          msgList.add(jsonDecode(data));
+        });
+      },
+      onDone: () {
+        print('ok');
+      },
+      onError: (err, stack) {
+        print('err');
+      },
+    );
     // 查询数据库，暂时无
   }
 
@@ -130,12 +144,20 @@ class _MessagesScreen extends State<MessagesScreen>
             )));
   }
 
-  submit() {
+  String wiredData(msg) {
+    final c = msg;
     final u = jsonDecode(Instances.sp.getString('userinfo') ?? '');
     final uid = u['_id'];
     final tid = widget.data['_id'];
-    final c = content;
     final datastr = '{"uid":"$uid", "tid": "$tid", "content": "$c", "cmd":1}';
+    return datastr;
+  }
+
+  submit() {
+    final datastr = wiredData(content);
+
+    print(datastr);
+
     widget.channel.sink.add(datastr);
     msgList.add(jsonDecode(datastr));
     setState(() {});
@@ -166,10 +188,11 @@ class _MessagesScreen extends State<MessagesScreen>
               child: ListView.builder(
                 itemCount: msgList.length,
                 itemBuilder: (context, index) =>
-                    Message(message: msgList[index]),
+                    Message(message: msgList[index],data: widget.data,),
               ),
             ),
           ),
+          // showData(),
           buildCommentInput(context),
         ],
       ),

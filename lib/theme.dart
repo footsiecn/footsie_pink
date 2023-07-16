@@ -9,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 ThemeData lightThemeData(BuildContext context) {
   return ThemeData.light().copyWith(
     primaryColor: kPrimaryColor,
+    
     scaffoldBackgroundColor: Colors.white,
     appBarTheme: appBarTheme,
     iconTheme: IconThemeData(color: kContentColorLightTheme),
@@ -18,6 +19,7 @@ ThemeData lightThemeData(BuildContext context) {
       primary: kPrimaryColor,
       secondary: kSecondaryColor,
       error: kErrorColor,
+      tertiary: KSuccessColor,
     ),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
       backgroundColor: Colors.white,

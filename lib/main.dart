@@ -14,7 +14,7 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  final u = jsonDecode(Instances.sp.getString('userinfo') ?? '');
+  final a = Instances.sp.getString('userinfo');
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.light,
       theme: lightThemeData(context),
       darkTheme: darkThemeData(context),
-      home: u != null ? ChatsScreen() : Login(),
+      home: a != null ? ChatsScreen() : Login(),
     );
   }
 }

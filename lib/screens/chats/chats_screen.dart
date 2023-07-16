@@ -59,7 +59,7 @@ class _ChatsScreen extends State<ChatsScreen>
       builder: (context, snapshot) {
         return Text(
           snapshot.hasData
-              ? '${snapshot.data == 'ok' ? '在线' : snapshot.data}'
+              ? '在线'
               : '',
         );
       },

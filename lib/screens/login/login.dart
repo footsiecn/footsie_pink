@@ -122,11 +122,8 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
           padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
           child: Column(
             children: [
-              Image.asset(
-                "assets/images/footsie-logo.png",
-                height: 120,
-              ),
               TabBar(
+                indicator: const BoxDecoration(),
                 tabs: const [
                   Tab(
                     text: "登录",

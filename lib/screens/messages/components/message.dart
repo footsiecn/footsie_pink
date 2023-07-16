@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:footsie/models/ChatMessage.dart';
 import 'package:flutter/material.dart';
+import 'package:footsie/util/reg_util.dart';
 
 import '../../../constants.dart';
 import 'audio_message.dart';
@@ -12,8 +14,9 @@ class Message extends StatelessWidget {
   const Message({
     Key? key,
     required this.message,
+    required this.data,
   }) : super(key: key);
-
+  final Map data;
   final Map message;
 
   @override
@@ -29,10 +32,15 @@ class Message extends StatelessWidget {
             isSender ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
           if (!isSender) ...[
-            const CircleAvatar(
-              radius: 12,
-              backgroundImage: AssetImage("assets/images/user_2.png"),
-            ),
+            CircleAvatar(
+            radius: 12,
+            child: ClipOval(
+                child: CachedNetworkImage(
+              imageUrl: getAvatar(avatar: data['email']),
+              width: 24,
+              height: 24,
+            )),
+          ),
             const SizedBox(width: kDefaultPadding / 2),
           ],
           Container(
