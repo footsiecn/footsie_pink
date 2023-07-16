@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:footsie/models/Chat.dart';
 import 'package:flutter/material.dart';
+import 'package:footsie/util/reg_util.dart';
 
 import '../../../constants.dart';
 
@@ -10,7 +12,7 @@ class ChatCard extends StatelessWidget {
     required this.press,
   }) : super(key: key);
 
-  final Chat chat;
+  final Map chat;
   final VoidCallback press;
 
   @override
@@ -26,9 +28,14 @@ class ChatCard extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 24,
-                  backgroundImage: AssetImage(chat.image),
+                  child: ClipOval(
+                      child: CachedNetworkImage(
+                    imageUrl: getAvatar(avatar: chat['email']),
+                    width: 30,
+                    height: 30,
+                  )),
                 ),
-                if (chat.isActive)
+                if (chat['distance'] < 10)
                   Positioned(
                     right: 0,
                     bottom: 0,
@@ -54,7 +61,7 @@ class ChatCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      chat.name,
+                      chat['name'],
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                     ),
@@ -62,7 +69,7 @@ class ChatCard extends StatelessWidget {
                     Opacity(
                       opacity: 0.64,
                       child: Text(
-                        chat.lastMessage,
+                        chat['_id'],
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -73,7 +80,7 @@ class ChatCard extends StatelessWidget {
             ),
             Opacity(
               opacity: 0.64,
-              child: Text(chat.time),
+              child: Text(chat['time'] ?? ''),
             ),
           ],
         ),

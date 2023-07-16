@@ -2,6 +2,7 @@ import 'package:footsie/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:footsie/util/reg_util.dart';
 import 'dart:convert';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import 'components/body.dart';
 
@@ -36,8 +37,13 @@ class _ChatsScreenState extends State<ChatsScreen> {
         const BottomNavigationBarItem(icon: Icon(Icons.people), label: "身边"),
         BottomNavigationBarItem(
           icon: CircleAvatar(
-            radius: 14,
-            child: Image.network(getAvatar(avatar: u['email'])),
+            radius: 24,
+            child: ClipOval(
+                child: CachedNetworkImage(
+              imageUrl: getAvatar(avatar: u['email']),
+              width: 30,
+              height: 30,
+            )),
           ),
           label: "我的",
         ),

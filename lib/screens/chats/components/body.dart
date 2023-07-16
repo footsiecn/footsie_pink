@@ -1,8 +1,9 @@
-
+import 'package:footsie/api.dart';
+import 'package:footsie/constants.dart';
 import 'package:footsie/models/Chat.dart';
 import 'package:footsie/screens/messages/message_screen.dart';
 import 'package:flutter/material.dart';
-
+import 'dart:convert';
 import 'chat_card.dart';
 
 class Body extends StatefulWidget {
@@ -13,11 +14,19 @@ class Body extends StatefulWidget {
 }
 
 class BodyState extends State<Body> with SingleTickerProviderStateMixin {
+  List userList = [];
+  Map userinfo = {};
+
+  getUserList() async {
+    final u = jsonDecode(Instances.sp.getString('userinfo') ?? '');
+    userList = jsonDecode((await getUsers(u['_id'])).data)['data'];
+    setState(() {});
+  }
+
   @override
   void initState() {
     super.initState();
-    
-    
+    getUserList();
   }
 
   @override
@@ -42,9 +51,9 @@ class BodyState extends State<Body> with SingleTickerProviderStateMixin {
         // ),
         Expanded(
           child: ListView.builder(
-            itemCount: chatsData.length,
+            itemCount: userList.length,
             itemBuilder: (context, index) => ChatCard(
-              chat: chatsData[index],
+              chat: userList[index],
               press: () => Navigator.push(
                 context,
                 MaterialPageRoute(
