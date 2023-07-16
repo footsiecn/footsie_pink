@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:footsie/api.dart';
 import 'package:footsie/components/primary_button.dart';
 import 'package:footsie/constants.dart';
@@ -171,13 +172,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
           padding: const EdgeInsets.all(50),
           child: Column(
             children: [
-              Text(
-                "小蓝书",
-                style: TextStyle(
-                    fontSize: 50,
-                    color: kPrimaryColor,
-                    fontWeight: FontWeight.bold),
-              ),
+              Image.asset('assets/xiaolanshu.png', height: 180,),
               TabBar(
                 labelColor: kSecondaryColor,
                 indicator: const BoxDecoration(),
